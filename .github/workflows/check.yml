@@ -9,6 +9,10 @@ on:
         description: "Send a test notification to the phones"
         type: boolean
         default: false
+      selftest:
+        description: "Check that product pages can be read from the cloud"
+        type: boolean
+        default: false
 
 permissions:
   contents: write              # to save state.json back to the repo
@@ -28,6 +32,7 @@ jobs:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
           if [ "${{ inputs.test_push }}" = "true" ]; then python3 check_cloud.py --test-push; fi
+          if [ "${{ inputs.selftest }}" = "true" ]; then python3 check_cloud.py --selftest; fi
           python3 check_cloud.py
       - name: Save state
         run: |

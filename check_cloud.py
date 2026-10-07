@@ -177,6 +177,11 @@ def deadline(items, matches, st):
 
 def main():
     state = json.load(open(STATE)) if os.path.exists(STATE) else {}
+    if "--selftest" in sys.argv:
+        for name, u in [("in stock (2TB $3,609)", "https://www.apple.com/ca/shop/product/g1mlall/a/"),
+                        ("sold out ($2,969 Silver)", "https://www.apple.com/ca/shop/product/fgdn4ll/a/")]:
+            log(f"SELFTEST product page {name}: buyable={buyable(u)}")
+        return
     if "--test-push" in sys.argv:
         push("Restock alert test", "If you see this, phone alerts work. You'll get one like it when the Mac is back.",
              MAC_URL)
