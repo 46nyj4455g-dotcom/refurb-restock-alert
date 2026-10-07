@@ -1,0 +1,38 @@
+name: Refurb restock check
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"     # every 5 min (GitHub may delay scheduled runs by a few minutes)
+  workflow_dispatch:           # "Run workflow" button for manual checks
+    inputs:
+      test_push:
+        description: "Send a test notification to the phones"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write              # to save state.json back to the repo
+
+concurrency:
+  group: restock-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Apple refurbished store
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          if [ "${{ inputs.test_push }}" = "true" ]; then python3 check_cloud.py --test-push; fi
+          python3 check_cloud.py
+      - name: Save state
+        run: |
+          git config user.name "restock-bot"
+          git config user.email "restock-bot@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || git commit -m "state $(date -u +%FT%TZ)" -q
+          git push -q || echo "push skipped"
