@@ -3,9 +3,16 @@
   "fails": 0,
   "seen": {}
  },
- "last_run": "2026-10-08T11:45:51.525453-03:00",
+ "last_run": "2026-10-08T12:02:52.034817-03:00",
  "mac": {
   "fails": 0,
-  "seen": {}
+  "seen": {
+   "FGDN4LL/A": {
+    "buyable": true
+   },
+   "FGDR4LL/A": {
+    "buyable": true
+   }
+  }
  }
 }
